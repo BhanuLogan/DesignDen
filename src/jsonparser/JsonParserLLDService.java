@@ -53,12 +53,12 @@ public class JsonParserLLDService implements LLDService {
                 """;
 
         System.out.println("ORIGINAL JSON: " + json);
-        Parser parser = new JsonParserWithTokenizer();
+        Parser parser = JsonParserWithTokenizer.getInstance();
         JsonObject obj = parser.parse(json);
 
         Serializer serializer = new JsonSerializer();
 
-        System.out.println("PARSED AND SERIALIZED JSON: " + serializer.serialize(obj));
+        System.out.println("PARSED AND SERIALIZED JSON:\n" + serializer.serialize(obj));
         System.out.println("--------------------------------------");
         System.out.println();
     }
@@ -82,7 +82,7 @@ public class JsonParserLLDService implements LLDService {
         JsonObject jsonObj = new JsonObject(properties, 1);
 
         Serializer serializer = new JsonSerializer();
-        System.out.println("PARSED JSON: " + serializer.serialize(jsonObj));
+        System.out.println("PARSED JSON:\n" + serializer.serialize(jsonObj));
         System.out.println("------------------------------------");
     }
 }

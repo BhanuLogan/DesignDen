@@ -26,7 +26,7 @@ public class JsonArray implements JsonElement {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for(JsonElement element : elements) {
-            if(sb.length() != 2) sb.append(",");
+            if(sb.length() != 1) sb.append(",");
             sb.append(String.format("\n%s%s", tabs, element.toString()));
         }
         sb.append("\n");

@@ -6,18 +6,28 @@ import jsonparser.interfaces.Tokenizer;
 import jsonparser.model.Token;
 import util.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class JsonTokenizer implements Tokenizer {
 
-    private int index;
+    private static JsonTokenizer instance;
 
-    public JsonTokenizer(String json) {
-        this.index = 0;
+    private JsonTokenizer() {}
+
+    // singleton
+    public static JsonTokenizer getInstance() {
+        if(instance == null) {
+            synchronized (JsonTokenizer.class) {
+                if(instance == null) {
+                    instance = new JsonTokenizer();
+                }
+            }
+        }
+        return instance;
     }
 
-    private String parseString(String json) {
+    private String parseString(String json, int index) {
         index++;  // Skip the opening quote
         StringBuilder result = new StringBuilder();
 
@@ -25,12 +35,10 @@ public class JsonTokenizer implements Tokenizer {
             result.append(json.charAt(index));
             index++;
         }
-
-        index++;  // Skip the closing quote
         return result.toString();
     }
 
-    private String parseNumber(String json) {
+    private String parseNumber(String json, int index) {
         StringBuilder result = new StringBuilder();
         char current = json.charAt(index);
 
@@ -48,9 +56,9 @@ public class JsonTokenizer implements Tokenizer {
     }
 
     @Override
-    public List<Token> tokenize(String json) throws JsonParseException {
-        List<Token> tokens = new ArrayList<>();
-
+    public Queue<Token> tokenize(String json) throws JsonParseException {
+        Queue<Token> tokens = new LinkedList<>();
+        int index = 0;
         while (index < json.length()) {
             char current = json.charAt(index);
 
@@ -75,9 +83,13 @@ public class JsonTokenizer implements Tokenizer {
                 tokens.add(new Token(Constants.TokenType.COLON, ":"));
                 index++;
             } else if (current == '"') {
-                tokens.add(new Token(Constants.TokenType.STRING, parseString(json)));
+                String token = parseString(json, index);
+                tokens.add(new Token(Constants.TokenType.STRING, token));
+                index += token.length() + 2; // + 2 is for skipping quotes
             } else if (Character.isDigit(current) || current == '-') {
-                tokens.add(new Token(Constants.TokenType.NUMBER, parseNumber(json)));
+                String token = parseNumber(json, index);
+                tokens.add(new Token(Constants.TokenType.NUMBER, token));
+                index += token.length();
             } else if (json.startsWith("true", index)) {
                 tokens.add(new Token(Constants.TokenType.TRUE, "true"));
                 index += 4;

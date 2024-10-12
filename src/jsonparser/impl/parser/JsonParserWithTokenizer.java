@@ -9,102 +9,112 @@ import jsonparser.interfaces.Parser;
 import jsonparser.model.Token;
 import util.Constants;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JsonParserWithTokenizer implements Parser {
 
-    private List<Token> tokens;
-    private int index = 0;
+    private static JsonParserWithTokenizer instance;
+
+    private JsonParserWithTokenizer() {}
+
+    // singleton
+    public static JsonParserWithTokenizer getInstance() {
+        if(instance == null) {
+            synchronized (JsonParserWithTokenizer.class) {
+                if(instance == null) {
+                    instance = new JsonParserWithTokenizer();
+                }
+            }
+        }
+        return instance;
+    }
 
     public JsonObject parse(String json) throws JsonParseException {
-        JsonTokenizer tokenizer = new JsonTokenizer(json);
-        this.tokens = tokenizer.tokenize(json);
-        this.index = 0;
-        return parseObject(1);
+        JsonTokenizer tokenizer = JsonTokenizer.getInstance();
+        Queue<Token> tokens = tokenizer.tokenize(json);
+        return parseObject(tokens,1);
     }
 
-    private Token currentToken() {
-        return tokens.get(index);
+    private Token currentToken(Queue<Token> tokens) {
+        return tokens.peek();
     }
 
-    private void nextToken() {
-        index++;
+    private void nextToken(Queue<Token> tokens) {
+        tokens.poll();
     }
 
-    private JsonElement parseValue(int level) throws JsonParseException {
-        Token token = currentToken();
+    private JsonElement parseValue(Queue<Token> tokens, int level) throws JsonParseException {
+        Token token = currentToken(tokens);
         switch (token.getType()) {
             case LEFT_BRACE:
-                return parseObject(level);
+                return parseObject(tokens, level);
             case LEFT_BRACKET:
-                return parseArray(level);
+                return parseArray(tokens, level);
             case STRING:
-                nextToken();
+                nextToken(tokens);
                 return new JsonString(token.getValue());
             case NUMBER:
-                nextToken();
+                nextToken(tokens);
                 return new JsonNumber(Double.parseDouble(token.getValue()));
             case TRUE:
-                nextToken();
+                nextToken(tokens);
                 return new JsonBoolean(true);
             case FALSE:
-                nextToken();
+                nextToken(tokens);
                 return new JsonBoolean(false);
             case NULL:
-                nextToken();
+                nextToken(tokens);
                 return null;
             default:
                 throw new JsonParseException("Unexpected token: " + token.getType());
         }
     }
 
-    private JsonObject parseObject(int level) throws JsonParseException {
-        expect(Constants.TokenType.LEFT_BRACE);
+    private JsonObject parseObject(Queue<Token> tokens, int level) throws JsonParseException {
+        expect(tokens, Constants.TokenType.LEFT_BRACE);
 
         Map<String, JsonElement> properties = new HashMap<>();
 
-        while (currentToken().getType() != Constants.TokenType.RIGHT_BRACE) {
-            Token keyToken = currentToken();
+        while (currentToken(tokens).getType() != Constants.TokenType.RIGHT_BRACE) {
+            Token keyToken = currentToken(tokens);
             if (keyToken.getType() != Constants.TokenType.STRING) {
                 throw new JsonParseException("Expected STRING key but got: " + keyToken.getType());
             }
 
             String key = keyToken.getValue();
-            nextToken();
-            expect(Constants.TokenType.COLON);
-            JsonElement value = parseValue(level + 1);
+            nextToken(tokens);
+            expect(tokens, Constants.TokenType.COLON);
+            JsonElement value = parseValue(tokens,level + 1);
 
             properties.put(key, value);
-            if (currentToken().getType() == Constants.TokenType.COMMA) {
-                nextToken();
+            if (currentToken(tokens).getType() == Constants.TokenType.COMMA) {
+                nextToken(tokens);
             }
         }
-        expect(Constants.TokenType.RIGHT_BRACE);
+        expect(tokens, Constants.TokenType.RIGHT_BRACE);
         return new JsonObject(properties, level);
     }
 
-    private JsonArray parseArray(int level) throws JsonParseException {
-        expect(Constants.TokenType.LEFT_BRACKET);
+    private JsonArray parseArray(Queue<Token> tokens, int level) throws JsonParseException {
+        expect(tokens, Constants.TokenType.LEFT_BRACKET);
         List<JsonElement> elements = new ArrayList<>();
-        while (currentToken().getType() != Constants.TokenType.RIGHT_BRACKET) {
-            JsonElement value = parseValue(level + 1);
+        while (currentToken(tokens).getType() != Constants.TokenType.RIGHT_BRACKET) {
+            JsonElement value = parseValue(tokens, level + 1);
             elements.add(value);
 
-            if (currentToken().getType() == Constants.TokenType.COMMA) {
-                nextToken();
+            if (currentToken(tokens).getType() == Constants.TokenType.COMMA) {
+                nextToken(tokens);
             }
         }
-        expect(Constants.TokenType.RIGHT_BRACKET);
+        expect(tokens, Constants.TokenType.RIGHT_BRACKET);
         return new JsonArray(elements, level);
     }
 
-    private void expect(Constants.TokenType expected) throws JsonParseException {
-        if (currentToken().getType() != expected) {
-            throw new JsonParseException("Expected " + expected + " but got " + currentToken().getType());
+    private void expect(Queue<Token> tokens, Constants.TokenType expected) throws JsonParseException {
+        Token token = currentToken(tokens);
+        if (token.getType() != expected) {
+            throw new JsonParseException("Expected " + expected + " but got " + token.getType());
         }
-        nextToken();
+        nextToken(tokens);
     }
 }
