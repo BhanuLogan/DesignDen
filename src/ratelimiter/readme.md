@@ -23,16 +23,16 @@ Here are some classes/interfaces you might use, but feel free to add/change as n
 1. **RateLimiter**: Interface that defines the contract for rate limiting.
     - `boolean isAllowed(String userId)`: Returns true if the request is allowed; false otherwise.
 
-2. **FixedWindowRateLimiter**: A concrete implementation using the **fixed window** approach. This will reset limits at fixed intervals (e.g., every 60 seconds).
+2. **TokenBucketRateLimiter**: A concrete implementation using the **token bucket** approach. This will re-fill tokens at regular intervals (e.g., every 60 seconds).
 
-3. **SlidingWindowRateLimiter** (Optional Advanced): Implement a sliding window rate limiter to handle requests more smoothly over time.
+3. **SlidingWindowRateLimiter** : Implement a sliding window rate limiter to handle requests more smoothly over time.
 
 ---
 
 ### Example Use Case:
 
 ```plaintext
-User-123: Allowed 10 requests per minute.
+Client-123: Allowed 10 requests per minute.
 - Request 1: Allowed (total: 1)
 - Request 2: Allowed (total: 2)
 ...
