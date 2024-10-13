@@ -16,19 +16,6 @@ You are asked to design a **Rate Limiter**. A **Rate Limiter** ensures that a cl
 - Keep the design **simple and extendable**. Later, this system might be enhanced to support features like **burst traffic handling** or **distributed rate limiting**.
 
 ---
-
-### Expected Classes and Interfaces:
-Here are some classes/interfaces you might use, but feel free to add/change as needed:
-
-1. **RateLimiter**: Interface that defines the contract for rate limiting.
-    - `boolean isAllowed(String userId)`: Returns true if the request is allowed; false otherwise.
-
-2. **TokenBucketRateLimiter**: A concrete implementation using the **token bucket** approach. This will re-fill tokens at regular intervals (e.g., every 60 seconds).
-
-3. **SlidingWindowRateLimiter** : Implement a sliding window rate limiter to handle requests more smoothly over time.
-
----
-
 ### Example Use Case:
 
 ```plaintext
