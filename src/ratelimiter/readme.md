@@ -1,7 +1,7 @@
 ## **Problem: Design a Rate Limiter**
 
 ### Problem Statement:
-You are asked to design a **Rate Limiter**. A **Rate Limiter** ensures that a client doesn’t exceed a predefined number of requests within a given time window. For example, an API might allow **100 requests per user per minute**. If a client exceeds this limit, further requests within the same window should be **rejected**.
+You are asked to design a **Rate Limiter**. A **Rate Limiter** ensures that a client doesn’t exceed a predefined number of requests within a given time window. For example, an API might allow **100 requests per user client minute**. If a client exceeds this limit, further requests within the same window should be **rejected**.
 
 ### Requirements:
 1. **Throttle User Requests:** If a user sends more requests than the allowed limit within the window, the system should block any further requests until the window resets.
@@ -26,13 +26,6 @@ Here are some classes/interfaces you might use, but feel free to add/change as n
 2. **FixedWindowRateLimiter**: A concrete implementation using the **fixed window** approach. This will reset limits at fixed intervals (e.g., every 60 seconds).
 
 3. **SlidingWindowRateLimiter** (Optional Advanced): Implement a sliding window rate limiter to handle requests more smoothly over time.
-
----
-
-### Additional Requirements:
-1. **Handle Multiple Users Simultaneously:** Ensure that the rate limiter works correctly for **multiple users**.
-2. **Thread Safety:** Ensure **concurrent requests** do not cause race conditions.
-3. **Testing:** Write **unit tests** to ensure your implementation works correctly.
 
 ---
 
