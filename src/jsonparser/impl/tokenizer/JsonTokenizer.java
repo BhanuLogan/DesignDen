@@ -11,20 +11,15 @@ import java.util.Queue;
 
 public class JsonTokenizer implements Tokenizer {
 
-    private static JsonTokenizer instance;
-
     private JsonTokenizer() {}
+
+    private static final class JsonTokenizerHolder {
+        private static final JsonTokenizer instance = new JsonTokenizer();
+    }
 
     // singleton
     public static JsonTokenizer getInstance() {
-        if(instance == null) {
-            synchronized (JsonTokenizer.class) {
-                if(instance == null) {
-                    instance = new JsonTokenizer();
-                }
-            }
-        }
-        return instance;
+        return JsonTokenizerHolder.instance;
     }
 
     private String parseString(String json, int index) {

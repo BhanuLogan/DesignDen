@@ -13,20 +13,15 @@ import java.util.*;
 
 public class JsonParserWithTokenizer implements Parser {
 
-    private static JsonParserWithTokenizer instance;
-
     private JsonParserWithTokenizer() {}
+
+    private static final class InstanceHolder {
+        private static final JsonParserWithTokenizer instance = new JsonParserWithTokenizer();
+    }
 
     // singleton
     public static JsonParserWithTokenizer getInstance() {
-        if(instance == null) {
-            synchronized (JsonParserWithTokenizer.class) {
-                if(instance == null) {
-                    instance = new JsonParserWithTokenizer();
-                }
-            }
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
     public JsonObject parse(String json) throws JsonParseException {
