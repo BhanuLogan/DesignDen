@@ -17,6 +17,6 @@ public class Constants {
     }
 
     public enum Design {
-        JSON_PARSER, RATE_LIMITER
+        JSON_PARSER, RATE_LIMITER, VENDING_MACHINE
     }
 }
