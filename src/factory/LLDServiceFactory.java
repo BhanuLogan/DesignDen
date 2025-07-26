@@ -13,7 +13,8 @@ public class LLDServiceFactory {
     public static Map<Constants.Design, LLDService> services = Map.ofEntries(
             Map.entry(Constants.Design.JSON_PARSER, new JsonParserLLDService()),
             Map.entry(Constants.Design.RATE_LIMITER, new RateLimiterLLDService()),
-            Map.entry(Constants.Design.VENDING_MACHINE, new VendingMachineLLDService())
+            Map.entry(Constants.Design.VENDING_MACHINE, new VendingMachineLLDService()),
+            Map.entry(Constants.Design.PARKING_LOT, new parkinglot.ParkingLotLLDService())
     );
 
     public static LLDService getService(Constants.Design design) {
