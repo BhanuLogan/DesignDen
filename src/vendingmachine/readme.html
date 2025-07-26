@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&#x1f9c3; Vending Machine - Low Level Design &lpar;LLD&rpar;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="-vending-machine---low-level-design-lld">🧃 Vending Machine - Low Level Design (LLD)</h1>
+<p>This project is a fully modular, extensible <strong>Low-Level Design (LLD)</strong> of a <strong>Vending Machine</strong> implemented in Java. It incorporates multiple design principles and patterns to ensure maintainability, testability, and scalability.</p>
+<hr>
+<h2 id="-problem-statement">📌 Problem Statement</h2>
+<p>Design and implement a vending machine that dispenses items when a user selects a product and makes the required payment. The machine should allow:</p>
+<ul>
+<li>Selecting items</li>
+<li>Accepting payments</li>
+<li>Dispensing products</li>
+<li>Returning change</li>
+<li>Managing inventory</li>
+</ul>
+<p>The system should support additional features like cart selection, multi-currency payments, admin operations, and discounts.</p>
+<hr>
+<h2 id="-functional-requirements">✅ Functional Requirements</h2>
+<ul>
+<li>View available items</li>
+<li>Select a product</li>
+<li>Accept cash, card, or wallet/UPI payments</li>
+<li>Dispense the selected item if payment is successful</li>
+</ul>
+<hr>
+<h2 id="-non-functional-requirements">🚫 Non-Functional Requirements</h2>
+<ul>
+<li>Thread-safe operations to support multiple users simultaneously</li>
+<li>Easy to extend for new currencies or payment methods</li>
+<li>Modular design with SOLID principles</li>
+<li>Strategy pattern for pricing and payment flexibility</li>
+</ul>
+<hr>
+<h2 id="-follow-up-features-implemented">🔁 Follow-Up Features Implemented</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Feature</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Multi-Currency Support</strong></td>
+<td>Support for INR and USD pricing</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Multiple Payment Methods</strong></td>
+<td>Cash, Card, and UPI/Wallet via Strategy Pattern</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Cart Support</strong></td>
+<td>Select and purchase multiple items at once</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Concurrency Handling</strong></td>
+<td>Thread-safe inventory updates using synchronization</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Admin Monitoring and Refill</strong></td>
+<td>Admin interface for stock refill and sales tracking</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Discounts and Loyalty Programs</strong></td>
+<td>Support for flat discounts and Buy-One-Get-One offers</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="-design-principles-used">🛠 Design Principles Used</h2>
+<ul>
+<li><strong>Strategy Pattern</strong>: For payments and pricing</li>
+<li><strong>SOLID Principles</strong>: Separation of concerns and extensibility</li>
+<li><strong>Interface Segregation</strong>: Payments and pricing logic decoupled</li>
+</ul>
+<hr>
+
+            
+            
+        </body>
+        </html>
