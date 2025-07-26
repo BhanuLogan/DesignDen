@@ -74,9 +74,6 @@ A company wants to build a parking lot system that can:
 
 - **Strategy Pattern** for dynamic pricing
 - **Factory Pattern** for vehicle and slot instantiation
-- **Singleton Pattern** for the central parking lot instance
-- **Observer Pattern** for real-time slot availability display
-- **State Pattern** for tracking ticket/payment status
 
 ---
 
