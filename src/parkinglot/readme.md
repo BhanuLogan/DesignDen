@@ -73,7 +73,7 @@ A company wants to build a parking lot system that can:
 ## 🛠 Design Patterns to Consider
 
 - **Strategy Pattern** for dynamic pricing
-- **Factory Pattern** for vehicle and slot instantiation
+- **Factory Pattern** for pricing and payment strategy instantiation
 
 ---
 
