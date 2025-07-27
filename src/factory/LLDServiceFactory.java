@@ -14,7 +14,8 @@ public class LLDServiceFactory {
             Map.entry(Constants.Design.JSON_PARSER, new JsonParserLLDService()),
             Map.entry(Constants.Design.RATE_LIMITER, new RateLimiterLLDService()),
             Map.entry(Constants.Design.VENDING_MACHINE, new VendingMachineLLDService()),
-            Map.entry(Constants.Design.PARKING_LOT, new parkinglot.ParkingLotLLDService())
+            Map.entry(Constants.Design.PARKING_LOT, new parkinglot.ParkingLotLLDService()),
+            Map.entry(Constants.Design.SNAKE_AND_LADDER, new snakeandladder.SnakeAndLadderLLDService())
     );
 
     public static LLDService getService(Constants.Design design) {
